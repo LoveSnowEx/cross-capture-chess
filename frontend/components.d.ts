@@ -11,6 +11,7 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     ChessBoard: typeof import('./src/components/ChessBoard.vue')['default']
     ChessCell: typeof import('./src/components/ChessCell.vue')['default']
+    ChessPiece: typeof import('./src/components/ChessPiece.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElInput: typeof import('element-plus/es')['ElInput']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']

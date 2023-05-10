@@ -36,7 +36,7 @@ const setBoard = () => {
                     type="textarea"
                     :autosize="{ minRows: 2, maxRows: 9 }"
                     v-model="input"
-                    placeholder="Please input the board"
+                    placeholder="Enter the custom board..."
                 />
                 <el-button @click="setBoard">Set Board</el-button>
             </div>
