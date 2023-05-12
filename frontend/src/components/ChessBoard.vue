@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { computed, ref } from "vue"
+import { Board } from "../scripts/game"
+import { ref } from "vue"
+
+const keyUpdate = ref(0)
 
 const props = defineProps<{
-    board: number[][]
+    board: Board
 }>()
-
-const height = computed(() => props.board.length)
-const width = computed(() => (props.board.length == 0 ? 0 : props.board[0].length))
 
 const getCellBgColor = (row: number, col: number): string => {
     if (row == hoverRow.value && col == hoverCol.value) {
@@ -36,27 +36,38 @@ const hoverRowButton = (row: number) => {
 const hoverColButton = (col: number) => {
     hoverCol.value = col
 }
+
+const eliminateRow = (row: number) => {
+    ++keyUpdate.value
+    props.board.eliminateRow(row)
+}
+
+const eliminateCol = (col: number) => {
+    ++keyUpdate.value
+    props.board.eliminateCol(col)
+}
 </script>
 
 <template>
-    <table class="chessboard">
+    <table class="chessboard" :key="keyUpdate">
         <tr>
-            <td v-for="(cell, i) in width" :key="i">
+            <td v-for="(_, i) in board.width" :key="i">
                 <div class="flex m-auto rounded justify-center items-center">
                     <button
                         class="eliminate-btn"
-                        @mousemove.prevent="hoverColButton(i)"
-                        @mouseleave.prevent="hoverColButton(-1)"
+                        @mousemove="hoverColButton(i)"
+                        @mouseleave="hoverColButton(-1)"
+                        @click="eliminateCol(i)"
                     >
                         <img src="@/assets/images/arrow-down.png" alt="arrow-down" />
                     </button>
                 </div>
             </td>
         </tr>
-        <tr v-for="(row, i) in board" :key="i">
-            <td v-for="(cell, j) in row" :key="j" class="cell" :class="getCellBgColor(i, j)">
-                <div @mousemove.prevent="hoverCell(i, j)" @mouseleave.prevent="hoverCell(-1, -1)">
-                    <chess-piece v-if="cell === 1" />
+        <tr v-for="(row, i) in board.board" :key="i">
+            <td v-for="(val, j) in row" :key="j" class="cell" :class="getCellBgColor(i, j)">
+                <div :key="keyUpdate" @mousemove="hoverCell(i, j)" @mouseleave="hoverCell(-1, -1)">
+                    <chess-piece v-if="val === 1" />
                 </div>
             </td>
             <td>
@@ -65,6 +76,7 @@ const hoverColButton = (col: number) => {
                         class="eliminate-btn"
                         @mousemove.prevent="hoverRowButton(i)"
                         @mouseleave.prevent="hoverRowButton(-1)"
+                        @click="eliminateRow(i)"
                     >
                         <img src="@/assets/images/arrow-right.png" alt="arrow-right" class="rotate-180" />
                     </button>
@@ -95,19 +107,16 @@ const hoverColButton = (col: number) => {
 
 .cell:hover {
     border-width: 2px;
-    border-radius: 10%;
-    --tw-border-opacity: 1;
-    border-color: rgb(0 0 0 / var(--tw-border-opacity));
 }
 
 .eliminate-btn {
     width: 40px;
     height: 40px;
+    border-color: transparent;
+    border-radius: 100%;
 }
 
 .eliminate-btn:hover {
     border-width: 1px;
-    border-color: transparent;
-    border-radius: 100%;
 }
 </style>
