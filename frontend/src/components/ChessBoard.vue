@@ -2,10 +2,13 @@
 import { Board } from "../scripts/game"
 import { ref } from "vue"
 
-const keyUpdate = ref(0)
-
 const props = defineProps<{
     board: Board
+}>()
+
+const emit = defineEmits<{
+    (e: "eliminateRow", row: number): void
+    (e: "eliminateCol", col: number): void
 }>()
 
 const getCellBgColor = (row: number, col: number): string => {
@@ -38,18 +41,16 @@ const hoverColButton = (col: number) => {
 }
 
 const eliminateRow = (row: number) => {
-    ++keyUpdate.value
-    props.board.eliminateRow(row)
+    emit("eliminateRow", row)
 }
 
 const eliminateCol = (col: number) => {
-    ++keyUpdate.value
-    props.board.eliminateCol(col)
+    emit("eliminateCol", col)
 }
 </script>
 
 <template>
-    <table class="chessboard" :key="keyUpdate">
+    <table class="chessboard">
         <tr>
             <td v-for="(_, i) in board.width" :key="i">
                 <div class="flex m-auto rounded justify-center items-center">
@@ -66,7 +67,7 @@ const eliminateCol = (col: number) => {
         </tr>
         <tr v-for="(row, i) in board.board" :key="i">
             <td v-for="(val, j) in row" :key="j" class="cell" :class="getCellBgColor(i, j)">
-                <div :key="keyUpdate" @mousemove="hoverCell(i, j)" @mouseleave="hoverCell(-1, -1)">
+                <div @mousemove="hoverCell(i, j)" @mouseleave="hoverCell(-1, -1)">
                     <chess-piece v-if="val === 1" />
                 </div>
             </td>
