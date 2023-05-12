@@ -68,37 +68,33 @@ export class Board {
     pushHitory(positions: Position[]) {
         this.snapshots.length = this.current + 1
         this.snapshots.push(positions)
-        this.current++
+        ++this.current
     }
 
     clearHitory() {
-        this.snapshots = []
+        this.snapshots.length = 0
         this.current = -1
     }
 
     undo() {
         if (!this.canUndo) return
         const positions = this.snapshots[this.current]
-        for (const pos of positions) {
-            this.add(pos)
-        }
-        this.current--
+        positions.forEach((pos) => this.add(pos))
+        --this.current
     }
 
     redo() {
         if (!this.canRedo) return
-        this.current++
+        ++this.current
         const positions = this.snapshots[this.current]
-        for (const pos of positions) {
-            return this.remove(pos)
-        }
+        positions.forEach((pos) => this.remove(pos))
     }
 
     eliminatePositions(positions: Position[]) {
         positions.forEach((pos) => this.remove(pos))
     }
 
-    eliminateRow = (row: number) => {
+    eliminateRow(row: number) {
         const positions = Array.from({ length: this.width }, (_, col) => ({ row, col } as Position)).filter(
             (pos) => this.getPosition(pos) == 1,
         )
