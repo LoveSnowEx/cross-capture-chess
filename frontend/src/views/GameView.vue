@@ -28,15 +28,12 @@ const DEFAULT_BOARD_HEIGHT = DEFAULT_BOARD.length
 const DEFAULT_BOARD_WIDTH = DEFAULT_BOARD[0].length
 
 const board = ref(new Board())
+board.value.setBoard(DEFAULT_BOARD)
 const input = ref(DEFAULT_BOARD.map((row) => row.join(" ")).join("\n"))
 const boardHeight = ref(DEFAULT_BOARD_HEIGHT)
 const boardWidth = ref(DEFAULT_BOARD_WIDTH)
-const sliderBoardHeight = ref(boardHeight.value)
-const sliderBoardWidth = ref(boardWidth.value)
 const dialogSetupVisible = ref(false)
 const messageHandle = ref<MessageHandler>()
-
-board.value.setBoard(DEFAULT_BOARD)
 
 const parseBitboard = (input: string) => {
     return input.trim().split(/\s+/).map(Number)
@@ -119,11 +116,11 @@ const warn = (msg: string) => {
                     <div class="flex flex-col space-y-2 justify-between">
                         <div class="flex space-x-5 items-center">
                             <span class="w-10 text-left">height:</span>
-                            <el-slider v-model="sliderBoardHeight" :min="1" :max="8" show-input />
+                            <el-slider v-model="boardHeight" :min="1" :max="8" show-input />
                         </div>
                         <div class="flex space-x-5 items-center">
                             <span class="w-10 text-left">width:</span>
-                            <el-slider v-model="sliderBoardWidth" :min="1" :max="8" show-input />
+                            <el-slider v-model="boardWidth" :min="1" :max="8" show-input />
                         </div>
                         <div>
                             <el-input
@@ -134,18 +131,12 @@ const warn = (msg: string) => {
                             />
                         </div>
                         <div>
-                            <el-button
-                                type="primary"
-                                @click="setBoard(input, sliderBoardHeight, sliderBoardWidth)"
-                                class="w-full"
+                            <el-button type="primary" @click="setBoard(input, boardHeight, boardWidth)" class="w-full"
                                 >Apply</el-button
                             >
                         </div>
                         <div>
-                            <el-button
-                                type="info"
-                                @click="setRandBoard(sliderBoardHeight, sliderBoardWidth)"
-                                class="w-full"
+                            <el-button type="info" @click="setRandBoard(boardHeight, boardWidth)" class="w-full"
                                 >Random</el-button
                             >
                         </div>
