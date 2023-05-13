@@ -94,19 +94,23 @@ export class Board {
         positions.forEach((pos) => this.remove(pos))
     }
 
-    eliminateRow(row: number) {
+    eliminateRow(row: number): boolean {
         const positions = Array.from({ length: this.width }, (_, col) => ({ row, col } as Position)).filter(
             (pos) => this.getPosition(pos) == 1,
         )
+        if (positions.length == 0) return false
         this.eliminatePositions(positions)
         this.pushHitory(positions)
+        return true
     }
 
-    eliminateCol(col: number) {
+    eliminateCol(col: number): boolean {
         const positions = Array.from({ length: this.height }, (_, row) => ({ row, col } as Position)).filter(
             (pos) => this.getPosition(pos) == 1,
         )
+        if (positions.length == 0) return false
         this.eliminatePositions(positions)
         this.pushHitory(positions)
+        return true
     }
 }

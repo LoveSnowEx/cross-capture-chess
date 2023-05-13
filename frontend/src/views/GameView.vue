@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { onMounted, ref } from "vue"
+import { ref } from "vue"
 import { Board } from "../scripts/game"
 import { reshape } from "../scripts/utils"
-import { ElMessage } from "element-plus"
+import { ElMessage, MessageHandler } from "element-plus"
 
 const DEFAULT_BOARD = [
     [
@@ -34,10 +34,9 @@ const boardWidth = ref(DEFAULT_BOARD_WIDTH)
 const sliderBoardHeight = ref(boardHeight.value)
 const sliderBoardWidth = ref(boardWidth.value)
 const dialogSetupVisible = ref(false)
+const messageHandle = ref<MessageHandler>()
 
-onMounted(() => {
-    board.value.setBoard(DEFAULT_BOARD)
-})
+board.value.setBoard(DEFAULT_BOARD)
 
 const parseBitboard = (input: string) => {
     return input.trim().split(/\s+/).map(Number)
@@ -52,10 +51,7 @@ const setBoard = (input: string, h: number, w: number) => {
 
     const isValidInput = () => bitboard.length >= h * w
     if (!isValidInput()) {
-        ElMessage({
-            message: "Warning, invalid input!",
-            type: "warning",
-        })
+        warn("Warning, invalid input!")
         return
     }
 
@@ -74,11 +70,17 @@ const setRandBoard = (h: number, w: number) => {
 }
 
 const eliminateRow = (row: number) => {
-    board.value.eliminateRow(row)
+    const ok = board.value.eliminateRow(row)
+    if (!ok) {
+        warn("Warning, the row is already eliminated!")
+    }
 }
 
 const eliminateCol = (col: number) => {
-    board.value.eliminateCol(col)
+    const ok = board.value.eliminateCol(col)
+    if (!ok) {
+        warn("Warning, the column is already eliminated!")
+    }
 }
 
 const showSetupDialog = () => {
@@ -87,6 +89,14 @@ const showSetupDialog = () => {
 
 const hideSetupDialog = () => {
     dialogSetupVisible.value = false
+}
+
+const warn = (msg: string) => {
+    if (messageHandle.value) messageHandle.value.close()
+    messageHandle.value = ElMessage({
+        message: msg,
+        type: "warning",
+    })
 }
 </script>
 
