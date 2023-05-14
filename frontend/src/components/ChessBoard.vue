@@ -52,6 +52,7 @@ const eliminateCol = (col: number) => {
 <template>
     <table class="chessboard">
         <tr>
+            <td />
             <td v-for="(_, i) in board.width" :key="i">
                 <div class="flex m-auto rounded justify-center items-center">
                     <button
@@ -66,6 +67,7 @@ const eliminateCol = (col: number) => {
             </td>
         </tr>
         <tr v-for="(row, i) in board.board" :key="i">
+            <td />
             <td v-for="(val, j) in row" :key="j" class="cell" :class="getCellBgColor(i, j)">
                 <div @mousemove="hoverCell(i, j)" @mouseleave="hoverCell(-1, -1)">
                     <chess-piece v-if="val === 1" />
