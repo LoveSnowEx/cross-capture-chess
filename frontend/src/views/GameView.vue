@@ -102,12 +102,12 @@ const warn = (msg: string) => {
         <div class="flex flex-col h-full justify-center items-center">
             <el-space direction="vertical">
                 <chess-board :board="board" @eliminateRow="eliminateRow" @eliminateCol="eliminateCol" />
-                <el-button type="primary" @click="showSetupDialog">New Board</el-button>
+                <el-button type="primary" @click="showSetupDialog">New Game</el-button>
             </el-space>
 
             <el-dialog
                 v-model="dialogSetupVisible"
-                title="New Board"
+                title="New Game"
                 :before-close="hideSetupDialog"
                 align-center
                 width="35%"
@@ -132,7 +132,7 @@ const warn = (msg: string) => {
                         </div>
                         <div>
                             <el-button type="primary" @click="setBoard(input, boardHeight, boardWidth)" class="w-full"
-                                >Apply</el-button
+                                >Start</el-button
                             >
                         </div>
                         <div>
